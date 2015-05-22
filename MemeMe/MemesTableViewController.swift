@@ -8,8 +8,10 @@
 
 import UIKit
 
-class MemesViewController: UIViewController {
+class MemesTableViewController: UITableViewController {
 
+    let TABLECELL = "tableCell"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -19,6 +21,17 @@ class MemesViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(TABLECELL) as! UITableViewCell
+        cell.textLabel!.text = "Label"
+        
+        return cell
     }
     
 

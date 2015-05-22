@@ -9,11 +9,15 @@
 import UIKit
 
 class Meme: NSObject {
-    var memeTopText: String?
-    var memeBottomText: String?
-    var memeImg: UIImage!
+    var topText: UITextField!
+    var bottomText: UITextField!
+    var img: UIImage!
+    var memedImg: UIImage!
     
     init(topText: UITextField!, bottomText: UITextField!, img: UIImage, memedImg: UIImage) {
-        self.memeImg = img
+        self.topText = topText
+        self.bottomText = topText
+        self.img = img
+        self.memedImg = memedImg
     }
 }
