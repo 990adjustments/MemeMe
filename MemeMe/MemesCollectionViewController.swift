@@ -8,8 +8,9 @@
 
 import UIKit
 
-class MemesCollectionViewController: UICollectionViewController {
+class MemesCollectionViewController: UIViewController {
     
+    let COLLECTION_CELL = "MemeCollectionCell"
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,4 +22,13 @@ class MemesCollectionViewController: UICollectionViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(COLLECTION_CELL, forIndexPath: indexPath) as! UICollectionViewCell
+        
+        return cell
+    }
 }

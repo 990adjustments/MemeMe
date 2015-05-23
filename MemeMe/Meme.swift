@@ -13,11 +13,13 @@ class Meme: NSObject {
     var bottomText: UITextField!
     var img: UIImage!
     var memedImg: UIImage!
+    var created: String
     
-    init(topText: UITextField!, bottomText: UITextField!, img: UIImage, memedImg: UIImage) {
+    init(topText: UITextField, bottomText: UITextField, img: UIImage, created: String, memedImg: UIImage) {
         self.topText = topText
         self.bottomText = topText
         self.img = img
         self.memedImg = memedImg
+        self.created = created
     }
 }

@@ -18,7 +18,8 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
     var meme: Meme!
-    var memeDB: [Meme]!
+    var memeArray = [Meme]()
+    var memedb =  SharedMemes()
     var activeField = false
     
     //let FONT: String = "HelveticaNeue-CondensedBlack"
@@ -35,11 +36,27 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     {
         let memedImage = generateMeme(pickedImageView.image!)
         
-        // Create Meme object
-        meme = Meme(topText: topText, bottomText: bottomText, img: pickedImageView.image!, memedImg: memedImage)
+        let currentTime = NSDate()
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "ddMMyy-HHmmss"
+        let dateCreated = formatter.stringFromDate(currentTime)
+        println(dateCreated)
+        
+        meme = Meme(topText: topText, bottomText: bottomText, img: pickedImageView.image!, created:"monday", memedImg: memedImage)
+        memeArray.append(meme)
+        self.memedb.shared.append(self.meme)
+        
+        let activityVC = UIActivityViewController(activityItems: memeArray, applicationActivities: nil)
+        navigationController?.presentViewController(activityVC, animated: true, completion: nil)
+        
+        //navigationController?.popToRootViewControllerAnimated(true)
+        
+//        let tabbarVC = storyboard?.instantiateViewControllerWithIdentifier("SentMemes") as! UItabbar
+//        tabbarVC.memes?.append(meme)
+//        presentViewController(tabbarVC, animated: true, completion: nil)
     }
     
-    @IBAction func newMeme()
+    @IBAction func cancelMeme()
     {
         UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.pickedImageView.alpha = 0.0    
@@ -54,6 +71,8 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         bottomText.background = UIImage(named: "border")
         
         shareButton.enabled = false
+        
+        navigationController?.popToRootViewControllerAnimated(true)
     }
     
     @IBAction func pickAnImageFromPhotoLibrary()
@@ -95,6 +114,8 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         self.pickedImageView.alpha = 0.0
         
         setTextAttributes()
+        
+        tabBarController?.tabBar.hidden = true
         
         // Is source availble?
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
@@ -138,7 +159,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!)
     {
-        var pickedImage = image
+        let pickedImage = image
         
         if pickedImage != nil {
             picker.dismissViewControllerAnimated(true, completion: { () -> Void in
@@ -247,6 +268,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         hideNavigationController()
         cameraButton.alpha = 1.0
         libraryButton.alpha = 1.0
+        println(memedImage)
         
         return memedImage
         

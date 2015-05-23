@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Erwin Santacruz. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-struct Memes {
-    var memeName: String
-    var dateCreated: String
+
+struct SharedMemes {
+    var shared = [Meme]()
 }

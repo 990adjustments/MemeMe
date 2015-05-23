@@ -8,14 +8,16 @@
 
 import UIKit
 
-class MemesTableViewController: UITableViewController {
+class MemesTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    let TABLECELL = "tableCell"
+    let TABLE_CELL = "MemeTableCell"
+    
+    //var sentMemes = [SentMemes]()
+    var memesDB = SharedMemes()
+    var memes: [Meme]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,13 +25,16 @@ class MemesTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return memesDB.shared.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(TABLECELL) as! UITableViewCell
-        cell.textLabel!.text = "Label"
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        //println(888)
+        let cell = tableView.dequeueReusableCellWithIdentifier(TABLE_CELL) as! UITableViewCell
+        let meme = memesDB.shared[indexPath.row]
+        //println(memesDB.shared[indexPath.row])
+        cell.textLabel!.text = meme.topText.text
         
         return cell
     }
