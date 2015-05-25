@@ -18,8 +18,6 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
     var meme: Meme!
-    var memeArray = [Meme]()
-    var memedb =  SharedMemes()
     var activeField = false
     
     //let FONT: String = "HelveticaNeue-CondensedBlack"
@@ -32,46 +30,36 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         NSStrokeWidthAttributeName: -3.0,
     ]
     
+    // MARK: IBActions -
+    
     @IBAction func shareMeme()
     {
-        let memedImage = generateMeme(pickedImageView.image!)
-        
         let currentTime = NSDate()
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "ddMMyy-HHmmss"
+        formatter.dateFormat = "MM-dd-yyyy"
         let dateCreated = formatter.stringFromDate(currentTime)
-        println(dateCreated)
         
-        meme = Meme(topText: topText, bottomText: bottomText, img: pickedImageView.image!, created:"monday", memedImg: memedImage)
-        memeArray.append(meme)
-        self.memedb.shared.append(self.meme)
+        let memedImage = generateMeme(pickedImageView.image!)
         
-        let activityVC = UIActivityViewController(activityItems: memeArray, applicationActivities: nil)
+        meme = Meme(topText: topText.text, bottomText: bottomText.text, img: pickedImageView.image!, created:dateCreated, memedImg: memedImage)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.memesDB.append(meme)
+
+        let activityVC = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
+        
+        activityVC.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+        activityVC.completionWithItemsHandler = {
+            (activityType:String!, completed:Bool, returnedItems:[AnyObject]!, activityError:NSError!) -> Void in
+                self.navigationController?.popToRootViewControllerAnimated(true)
+            }
+    
         navigationController?.presentViewController(activityVC, animated: true, completion: nil)
-        
-        //navigationController?.popToRootViewControllerAnimated(true)
-        
-//        let tabbarVC = storyboard?.instantiateViewControllerWithIdentifier("SentMemes") as! UItabbar
-//        tabbarVC.memes?.append(meme)
-//        presentViewController(tabbarVC, animated: true, completion: nil)
     }
     
     @IBAction func cancelMeme()
     {
-        UIView.animateWithDuration(0.3, animations: { () -> Void in
-            self.pickedImageView.alpha = 0.0    
-            }) { (Bool) -> Void in
-                self.pickedImageView.image = nil
-        }
-        
-        topText.text = nil
-        bottomText.text = nil
-        
-        topText.background = UIImage(named: "border")
-        bottomText.background = UIImage(named: "border")
-        
-        shareButton.enabled = false
-        
+        memeEditorCleanup()
         navigationController?.popToRootViewControllerAnimated(true)
     }
     
@@ -83,20 +71,9 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     @IBAction func takeAPictureWithCamera()
     {
         pickImage(UIImagePickerControllerSourceType.Camera)
-        
-        // Is camera available?
-        /*
-        if !UIImagePickerController.isCameraDeviceAvailable(UIImagePickerControllerCameraDevice.Rear) {
-        println("Camera not available")
-        
-        //let alert = UIAlertView(title: "Camera Device", message: "The camera device is currently not availbale.", delegate: self, cancelButtonTitle: "Cancel")
-        //alert.show()
-        }
-        else {
-        pickImage(UIImagePickerControllerSourceType.Camera)
-        }
-        */
     }
+    
+    // MARK: Overridden methods -
     
     override func viewDidLoad()
     {
@@ -110,10 +87,8 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     {
         super.viewWillAppear(animated)
 
-        self.subscribeToKeyboardNotifications()
-        self.pickedImageView.alpha = 0.0
-        
-        setTextAttributes()
+        subscribeToKeyboardNotifications()
+        pickedImageView.alpha = 0.0
         
         tabBarController?.tabBar.hidden = true
         
@@ -125,19 +100,59 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
+        
+        tabBarController?.tabBar.hidden = false
+        memeEditorCleanup()
     }
-    
+
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent)
     {
-        hideNavigationController()
+        let nav = navigationController!.navigationBarHidden
+        
+        hideNavigationController(nav)
+        hideButtonsOnOff(0.3, on: nav)
+        
+        topText.resignFirstResponder()
+        bottomText.resignFirstResponder()
     }
     
-    func hideNavigationController()
+    func hideNavigationController(hide: Bool)
     {
-        //var nav = (navigationController!.navigationBarHidden) ? false : true
-        var nav = navigationController!.navigationBarHidden
-        navigationController?.setNavigationBarHidden(!nav, animated: true)
+        navigationController?.setNavigationBarHidden(!hide, animated: true)
+    }
+    
+    func hideButtonsOnOff(duration: NSTimeInterval, on: Bool)
+    {
+        if on {
+            UIView.animateWithDuration(duration, animations: { () -> Void in
+                self.cameraButton.alpha = 1.0
+                self.libraryButton.alpha = 1.0
+            })
+        }
+        else {
+            UIView.animateWithDuration(duration, animations: { () -> Void in
+                self.cameraButton.alpha = 0
+                self.libraryButton.alpha = 0
+            })
+        }
+    }
+    
+    func memeEditorCleanup()
+    {
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+            self.pickedImageView.alpha = 0.0
+            }) { (Bool) -> Void in
+                self.pickedImageView.image = nil
+        }
+        
+        self.topText.text = nil
+        self.bottomText.text = nil
+        
+        self.topText.background = UIImage(named: "border")
+        self.bottomText.background = UIImage(named: "border")
+        
+        self.shareButton.enabled = false
     }
     
     func setTextAttributes()
@@ -157,6 +172,30 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
     
+    func generateMeme(img: UIImage) -> UIImage
+    {
+        if navigationController?.navigationBarHidden != true {
+            hideNavigationController(false)
+        }
+        
+        cameraButton.alpha = 0
+        libraryButton.alpha = 0
+        
+        // Render snapshot of view
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        self.view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
+        
+        let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        hideNavigationController(true)
+        
+        cameraButton.alpha = 1.0
+        libraryButton.alpha = 1.0
+        
+        return memedImage
+    }
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!)
     {
         let pickedImage = image
@@ -168,15 +207,21 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
                     self.pickedImageView.alpha = 1.0
                 })
             })
-            
-            shareButton.enabled = true
         }
+        
+        enableShareButton()
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController)
     {
-        println("User cancelled.")
         picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func enableShareButton()
+    {
+        if (count(topText.text) != 0 && count(bottomText.text) != 0) && pickedImageView.image != nil {
+            shareButton.enabled = true
+        }
     }
     
     // MARK: NSNotifications -
@@ -189,7 +234,6 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     
     func unsubscribeFromKeyboardNotifications()
     {
-        //NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidBeginEditingNotification, object: bottomText)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
@@ -227,6 +271,10 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     
     func textFieldDidBeginEditing(textField: UITextField)
     {
+        // Setting attributes here because text attributes seem to reset
+        // when textfield is left blank
+        setTextAttributes()
+        
         // Check if bottom text field is being edited
         activeField = textField == bottomText ? true : false
     }
@@ -243,36 +291,11 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         }
         else {
             textField.background = nil
+            enableShareButton()
         }
     }
     
     // MARK: -
-    
-    func generateMeme(img: UIImage) -> UIImage
-    {
-        if navigationController?.navigationBarHidden != true {
-            hideNavigationController()
-        }
-        
-        cameraButton.alpha = 0
-        libraryButton.alpha = 0
-        
-        // Render snapshot of view
-        println("UIGRAPICS")
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        self.view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
-        
-        let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        hideNavigationController()
-        cameraButton.alpha = 1.0
-        libraryButton.alpha = 1.0
-        println(memedImage)
-        
-        return memedImage
-        
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

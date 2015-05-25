@@ -12,31 +12,61 @@ class MemesTableViewController: UIViewController, UITableViewDataSource, UITable
 
     let TABLE_CELL = "MemeTableCell"
     
-    //var sentMemes = [SentMemes]()
-    var memesDB = SharedMemes()
-    var memes: [Meme]?
+    var appDelegate: AppDelegate!
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return memesDB.shared.count
+        return appDelegate.memesDB.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //println(888)
-        let cell = tableView.dequeueReusableCellWithIdentifier(TABLE_CELL) as! UITableViewCell
-        let meme = memesDB.shared[indexPath.row]
-        //println(memesDB.shared[indexPath.row])
-        cell.textLabel!.text = meme.topText.text
+        let cell = tableView.dequeueReusableCellWithIdentifier(TABLE_CELL) as! MemesTableViewCell
+        let memeAtIndexPath = appDelegate.memesDB[indexPath.row]
         
+        cell.topText.text = memeAtIndexPath.topText
+        cell.bottomText.text = memeAtIndexPath.bottomText
+        cell.memeImage.image = memeAtIndexPath.memedImg
+        cell.dateCreated.text = memeAtIndexPath.created
+
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let detailVC = storyboard?.instantiateViewControllerWithIdentifier("MemeImage") as! MemeDetailViewController
+        let memeAtIndexPath = appDelegate.memesDB[indexPath.row]
+        
+        detailVC.memeImage = memeAtIndexPath.memedImg
+        detailVC.navigationItem.title = memeAtIndexPath.created
+        
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        // Delete row on swipe
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            appDelegate.memesDB.removeAtIndex(indexPath.row)
+            
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+            tableView.reloadData()
+        }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
 
