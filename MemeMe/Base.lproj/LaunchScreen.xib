@@ -27,18 +27,29 @@
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="meme-troll" translatesAutoresizingMaskIntoConstraints="NO" id="nUk-Fj-UvY">
+                    <rect key="frame" x="150" y="191" width="180" height="180"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="180" id="bbo-C4-9vT"/>
+                        <constraint firstAttribute="height" constant="180" id="hP0-Wv-XDR"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="9mJ-Zv-qde" secondAttribute="trailing" id="16W-UV-QOH"/>
+                <constraint firstItem="nUk-Fj-UvY" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="150" id="1ZX-RL-tL2"/>
+                <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="nUk-Fj-UvY" secondAttribute="bottom" constant="72" id="3c0-dT-fqy"/>
                 <constraint firstItem="kId-c2-rCX" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="bottom" multiplier="1/3" constant="1" id="5cJ-9S-tgC"/>
                 <constraint firstAttribute="centerX" secondItem="kId-c2-rCX" secondAttribute="centerX" id="Koa-jz-hwk"/>
                 <constraint firstAttribute="bottom" secondItem="8ie-xW-0ye" secondAttribute="bottom" constant="20" id="Kzo-t9-V3l"/>
                 <constraint firstItem="8ie-xW-0ye" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" symbolic="YES" id="MfP-vx-nX0"/>
                 <constraint firstItem="9mJ-Zv-qde" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Pzw-Sh-m7g"/>
                 <constraint firstAttribute="centerX" secondItem="8ie-xW-0ye" secondAttribute="centerX" id="ZEH-qu-HZ9"/>
+                <constraint firstAttribute="trailing" secondItem="nUk-Fj-UvY" secondAttribute="trailing" constant="150" id="aaF-oe-awQ"/>
                 <constraint firstItem="9mJ-Zv-qde" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="bbu-uK-nqx"/>
                 <constraint firstItem="kId-c2-rCX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" symbolic="YES" id="fvb-Df-36g"/>
+                <constraint firstItem="nUk-Fj-UvY" firstAttribute="top" secondItem="kId-c2-rCX" secondAttribute="bottom" constant="8" id="nMQ-Tf-m5z"/>
                 <constraint firstAttribute="bottom" secondItem="9mJ-Zv-qde" secondAttribute="bottom" id="yR7-ZH-DPG"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
@@ -48,5 +59,6 @@
     </objects>
     <resources>
         <image name="bg" width="682" height="512"/>
+        <image name="meme-troll" width="60" height="60"/>
     </resources>
 </document>
