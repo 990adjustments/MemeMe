@@ -28,7 +28,7 @@
         <!--MemeMe Editor-->
         <scene sceneID="WH8-Ez-Xy1">
             <objects>
-                <viewController title="MemeMe Editor" id="kvG-sD-3Ea" customClass="MemeEditorViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MemeMeEditor" title="MemeMe Editor" id="kvG-sD-3Ea" customClass="MemeEditorViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="K8G-t3-BcN"/>
                         <viewControllerLayoutGuide type="bottom" id="SXc-FC-Zz6"/>
@@ -186,17 +186,13 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VVz-mc-cNB">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="2Y8-iS-fOi">
                                     <size key="itemSize" width="120" height="120"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
-                                <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" id="uMs-2Q-L6L">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                </imageView>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MemeCollectionCell" id="8LI-D5-J62" customClass="MemesCollectionViewCell" customModule="MemeMe" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -232,20 +228,14 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 2" id="ddS-2D-3A8"/>
-                    <navigationItem key="navigationItem" title="Sent Memes" id="t9N-Gk-m2C">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="2xA-Ma-lms">
-                            <connections>
-                                <segue destination="kvG-sD-3Ea" kind="show" id="2Jc-X8-gAR"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Sent Memes" id="t9N-Gk-m2C"/>
                     <connections>
-                        <outlet property="collectionView" destination="VVz-mc-cNB" id="no8-yA-zvc"/>
+                        <outlet property="collectionView" destination="VVz-mc-cNB" id="rwm-ll-3MB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fWN-4y-cZv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1374" y="2919"/>
+            <point key="canvasLocation" x="1284" y="2907"/>
         </scene>
         <!--Meme Table-->
         <scene sceneID="xqq-Fj-lOu">
@@ -339,13 +329,7 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="N5p-th-rtA"/>
-                    <navigationItem key="navigationItem" title="Sent Memes" id="DnA-Iw-nr1">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="dKV-bM-Dlx">
-                            <connections>
-                                <segue destination="kvG-sD-3Ea" kind="show" id="72x-Ub-oVA"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Sent Memes" id="DnA-Iw-nr1"/>
                     <connections>
                         <outlet property="tableView" destination="71p-5J-YLu" id="svx-hA-jTB"/>
                     </connections>
@@ -402,7 +386,4 @@
         <image name="photoLibrary" width="86" height="86"/>
         <image name="table" width="27" height="29"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="72x-Ub-oVA"/>
-    </inferredMetricsTieBreakers>
 </document>

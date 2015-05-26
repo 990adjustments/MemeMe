@@ -13,6 +13,8 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDataSourc
     let COLLECTION_CELL = "MemeCollectionCell"
     
     var appDelegate: AppDelegate!
+    var editButton: UIBarButtonItem!
+    var addButton: UIBarButtonItem!
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -20,12 +22,20 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDataSourc
         super.viewDidLoad()
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        // Set up UIBar buttons
+        editButton = editButtonItem()
+        addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: Selector("pushMemeMeEditor"))
+        
+        navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         collectionView.reloadData()
+        
+        editButton.enabled = !appDelegate.memesDB.isEmpty
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -42,13 +52,33 @@ class MemesCollectionViewController: UIViewController, UICollectionViewDataSourc
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let detailVC = storyboard?.instantiateViewControllerWithIdentifier("MemeImage") as! MemeDetailViewController
-        let memeAtIndexPath = appDelegate.memesDB[indexPath.row]
-        
-        detailVC.memeImage = memeAtIndexPath.memedImg
-        detailVC.navigationItem.title = memeAtIndexPath.created
-        
-        navigationController?.pushViewController(detailVC, animated: true)
+        // Check if in editing mode
+        if editing {
+            appDelegate.memesDB.removeAtIndex(indexPath.row)
+            collectionView.deleteItemsAtIndexPaths([indexPath])
+            collectionView.reloadData()
+            
+            // Disable Edit button if no memes
+            if appDelegate.memesDB.isEmpty {
+                setEditing(false, animated: true)
+                editButton.enabled = false
+            }
+        }
+        else {
+            let detailVC = storyboard?.instantiateViewControllerWithIdentifier("MemeImage") as! MemeDetailViewController
+            let memeAtIndexPath = appDelegate.memesDB[indexPath.row]
+            
+            detailVC.memeImage = memeAtIndexPath.memedImg
+            detailVC.navigationItem.title = memeAtIndexPath.created
+            
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
+    
+    func pushMemeMeEditor()
+    {
+        let editorVC = storyboard?.instantiateViewControllerWithIdentifier("MemeMeEditor") as! MemeEditorViewController
+        navigationController?.pushViewController(editorVC, animated: true)
     }
     
     override func didReceiveMemoryWarning() {

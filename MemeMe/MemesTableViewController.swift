@@ -13,6 +13,8 @@ class MemesTableViewController: UIViewController, UITableViewDataSource, UITable
     let TABLE_CELL = "MemeTableCell"
     
     var appDelegate: AppDelegate!
+    var addButton: UIBarButtonItem!
+    var editButton: UIBarButtonItem!
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -20,12 +22,26 @@ class MemesTableViewController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        // Set up UIBar buttons
+        editButton = editButtonItem()
+        addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: Selector("pushMemeMeEditor"))
+        
+        navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         tableView.reloadData()
+        
+        editButton.enabled = !appDelegate.memesDB.isEmpty
+    }
+    
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        tableView.setEditing(editing, animated: true)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,30 +70,36 @@ class MemesTableViewController: UIViewController, UITableViewDataSource, UITable
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        // Delete row on swipe
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        println(__FUNCTION__)
+        
+        return UITableViewCellEditingStyle.Delete
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
+    {
         if editingStyle == UITableViewCellEditingStyle.Delete {
             appDelegate.memesDB.removeAtIndex(indexPath.row)
             
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-            tableView.reloadData()
+            
+            // Disable Edit button if no memes
+            if appDelegate.memesDB.isEmpty {
+                setEditing(false, animated: true)
+                editButton.enabled = false
+            }
         }
+    }
+    
+    func pushMemeMeEditor()
+    {
+        let editorVC = storyboard?.instantiateViewControllerWithIdentifier("MemeMeEditor") as! MemeEditorViewController
+        navigationController?.pushViewController(editorVC, animated: true)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

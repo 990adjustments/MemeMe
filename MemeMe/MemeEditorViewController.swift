@@ -10,9 +10,9 @@ import UIKit
 
 class MemeEditorViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate {
 
-    @IBOutlet var pickedImageView: UIImageView!
-    @IBOutlet var topText: UITextField!
-    @IBOutlet var bottomText: UITextField!
+    @IBOutlet weak var pickedImageView: UIImageView!
+    @IBOutlet weak var topText: UITextField!
+    @IBOutlet weak var bottomText: UITextField!
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var libraryButton: UIButton!
     @IBOutlet weak var shareButton: UIBarButtonItem!
@@ -248,6 +248,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     
     func keyboardWillShow(notification: NSNotification)
     {
+        // If top UITextField is being edited do not move up view
         if !activeField {
             return
         }
@@ -272,7 +273,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     func textFieldDidBeginEditing(textField: UITextField)
     {
         // Setting attributes here because text attributes seem to reset
-        // when textfield is left blank
+        // when UITextField is clicked on and left blank
         setTextAttributes()
         
         // Check if bottom text field is being edited
@@ -280,7 +281,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
-        // Check if user leaves text field blank
+        // Check if user leaves UITextField blank
         if count(textField.text) < 1{
             if textField.background != nil {
                 return
@@ -290,6 +291,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
             }
         }
         else {
+            // There is text present so remove background image
             textField.background = nil
             enableShareButton()
         }
