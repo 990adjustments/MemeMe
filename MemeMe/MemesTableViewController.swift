@@ -1,5 +1,5 @@
 //
-//  MemesViewController.swift
+//  MemesViewTableViewController.swift
 //  MemeMe
 //
 //  Created by Erwin Santacruz on 5/19/15.

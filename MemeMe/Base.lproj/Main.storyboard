@@ -70,7 +70,7 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Text" textAlignment="center" minimumFontSize="17" background="border" translatesAutoresizingMaskIntoConstraints="NO" id="Bxy-vJ-CFW">
-                                <rect key="frame" x="16" y="89" width="568" height="44"/>
+                                <rect key="frame" x="16" y="45" width="568" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="HhC-W4-BLr"/>
                                 </constraints>
@@ -235,7 +235,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fWN-4y-cZv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1284" y="2907"/>
+            <point key="canvasLocation" x="1374" y="2919"/>
         </scene>
         <!--Meme Table-->
         <scene sceneID="xqq-Fj-lOu">
