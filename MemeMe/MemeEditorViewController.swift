@@ -81,6 +81,7 @@ class MemeEditorViewController: UIViewController, UINavigationControllerDelegate
         
         setTextAttributes()
         shareButton.enabled = false
+        tabBarController?.tabBar.hidden = true
     }
     
     override func viewWillAppear(animated: Bool)

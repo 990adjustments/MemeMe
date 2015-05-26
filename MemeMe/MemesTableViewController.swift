@@ -23,6 +23,11 @@ class MemesTableViewController: UIViewController, UITableViewDataSource, UITable
         
         appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
+        // If there are no Memes, show Editor
+        if appDelegate.memesDB.isEmpty {
+            pushMemeMeEditor()
+        }
+        
         // Set up UIBar buttons
         editButton = editButtonItem()
         addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: Selector("pushMemeMeEditor"))
